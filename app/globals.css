@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+/* ---------- Design tokens (OKLCH, neutrals tinted toward the brand blue) ---------- */
+@theme {
+  --color-void: oklch(0.135 0.028 268);      /* #050814 */
+  --color-void-2: oklch(0.175 0.032 262);
+  --color-void-3: oklch(0.22 0.035 258);
+  --color-line: oklch(0.89 0.15 197 / 0.16);
+  --color-ink: oklch(0.96 0.012 230);
+  --color-mute: oklch(0.76 0.03 240);
+  --color-faint: oklch(0.6 0.03 245);
+  --color-cyan: oklch(0.885 0.152 197);      /* #00f3ff */
+  --color-cyan-deep: oklch(0.62 0.12 205);
+  --color-orange: oklch(0.715 0.199 48);     /* #ff7700 */
+  --color-ok: oklch(0.82 0.17 150);
+  --color-warn: oklch(0.83 0.16 85);
+
+  --font-display: "Chakra Petch", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans Arabic", "Chakra Petch", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+:root {
+  color-scheme: dark;
+  --glow-cyan: 0 0 0 1px oklch(0.885 0.152 197 / 0.35), 0 0 28px -6px oklch(0.885 0.152 197 / 0.55);
+  --glow-orange: 0 0 0 1px oklch(0.715 0.199 48 / 0.45), 0 0 28px -6px oklch(0.715 0.199 48 / 0.6);
+}
+
+html {
+  background: var(--color-void);
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: oklch(0.885 0.152 197 / 0.3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- Reusable surfaces ---------- */
+@utility glass {
+  background: oklch(0.175 0.032 262 / 0.58);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid oklch(0.89 0.15 197 / 0.14);
+}
+
+@utility glass-strong {
+  background: oklch(0.16 0.03 264 / 0.82);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid oklch(0.89 0.15 197 / 0.18);
+}
+
+@utility glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+@utility glow-orange {
+  box-shadow: var(--glow-orange);
+}
+
+@utility text-glow {
+  text-shadow: 0 0 18px oklch(0.885 0.152 197 / 0.55);
+}
+
+@utility text-glow-orange {
+  text-shadow: 0 0 18px oklch(0.715 0.199 48 / 0.6);
+}
+
+/* Hairline HUD corners for hologram panels */
+@utility hud {
+  position: relative;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--color-cyan);
+    pointer-events: none;
+  }
+  &::before {
+    inset-block-start: -1px;
+    inset-inline-start: -1px;
+    border-block-start: 2px solid;
+    border-inline-start: 2px solid;
+    border-start-start-radius: 6px;
+  }
+  &::after {
+    inset-block-end: -1px;
+    inset-inline-end: -1px;
+    border-block-end: 2px solid;
+    border-inline-end: 2px solid;
+    border-end-end-radius: 6px;
+  }
+}
+
+/* Pressable: instant feedback, transform only */
+@utility press {
+  transition: transform 160ms var(--ease-out-strong), box-shadow 200ms var(--ease-out-strong),
+    background-color 200ms var(--ease-out-strong), border-color 200ms var(--ease-out-strong);
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Faint blueprint grid used behind 2D surfaces */
+@utility bg-blueprint {
+  background-image: linear-gradient(oklch(0.89 0.15 197 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.89 0.15 197 / 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Technical micro-labels: mono + tracking in Latin; Arabic must never be letter-spaced
+   (it breaks cursive joining) and mono fonts have no Arabic glyphs. */
+.label-tech {
+  font-family: var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.label-tech:lang(ar) {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Terminal caret */
+@keyframes caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.caret::after {
+  content: "▋";
+  margin-inline-start: 2px;
+  color: var(--color-cyan);
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes pulse-ring {
+  from { transform: scale(0.6); opacity: 0.9; }
+  to { transform: scale(2.4); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 1.8s var(--ease-out-strong) infinite;
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+.scanline {
+  animation: scan 3.2s linear infinite;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float-y {
+  animation: float-y 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .caret::after, .pulse-ring, .scanline, .float-y { animation: none; }
+}
