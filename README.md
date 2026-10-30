@@ -7,6 +7,7 @@ npm install          # .npmrc active legacy-peer-deps (postprocessing ↔ three)
 npm run dev          # http://localhost:3000
 npm run build && npm start
 npm run qa           # Playwright + axe (serveur lancé sur :3000)
+npm run qa:install   # مرة واحدة: تحميل متصفح Chromium لـ Playwright
 ```
 
 ## Structure
